@@ -25,7 +25,7 @@ To give a try of our algorithm without any local data, one could call
 ```
 python demo_realdata.py
 ```
-To reproduce the numerical result in paper, one can run the following commands respectively
+To reproduce the numerical results in paper, one can run the following commands respectively
 ```
 python experiments_realdata.py --solvers GUROBI --repeat_time 20 --data_scale moderate
 python experiments_realdata.py --solvers open_source --repeat_time 20 --data_scale moderate
