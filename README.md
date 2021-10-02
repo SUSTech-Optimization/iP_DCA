@@ -20,3 +20,15 @@ Here we recommand researchers to try the commercial solvers for moderate-size pr
 
 However, for large-scale problem, `SCS` based on `OpenMP` may perform better with the default setting. 
 
+## Usage
+To give a try of our algorithm without any local data, one could call 
+```
+python demo_realdata.py
+```
+To reproduce the numerical result in paper, one can run the following respectively
+```
+python experiments_realdata.py --solvers GUROBI --repeat_time 20 --data_scale moderate
+python experiments_realdata.py --solvers open_source --repeat_time 20 --data_scale moderate
+python experiments_realdata.py --solvers open_source --repeat_time 20 --data_scale large
+```
+
