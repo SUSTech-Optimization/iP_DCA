@@ -200,6 +200,12 @@ def test(XTrn, yTrn, J_val, J_trn, XTest, yTest, lam, w_bar):
     result = dict(train_err = train_err, cross_err = cross_err, test_err = test_err)
     ---------
     '''
+    svm_solver = ''
+    solvers = cp.installed_solvers()
+    if 'MOSEK' in solvers: svm_slover = cp.MOSEK
+    if 'GUROBI' in solvers: svm_solver = cp.GUROBI
+    if not len(svm_solver): svm_solver = cp.ECOS 
+
     T, n, nVal, nTrn = len(J_val), XTrn.shape[1], len(J_val[0]), len(J_trn[0])
     W, c = cp.Variable([T, n]), cp.Variable(T)
     f1 = lam*cp.sum_squares(W)
@@ -211,7 +217,7 @@ def test(XTrn, yTrn, J_val, J_trn, XTest, yTest, lam, w_bar):
         svm_constraints += [W[t, i] >= -w_bar[i] for i in range(n)] + [W[t, i] <= w_bar[i] for i in range(n)]
         
     prob_svm = cp.Problem(cp.Minimize(svm_loss), svm_constraints)
-    prob_svm.solve(solver = cp.GUROBI)
+    prob_svm.solve(solver = svm_solver)
     
     W_0, c_0 = W.value, c.value
     
@@ -227,7 +233,7 @@ def test(XTrn, yTrn, J_val, J_trn, XTest, yTest, lam, w_bar):
     svm_constraints = [W[i] >= -w_bar[i] for i in range(n)] + [W[i] <= w_bar[i] for i in range(n)]
         
     prob_svm = cp.Problem(cp.Minimize(svm_loss), svm_constraints)
-    prob_svm.solve(solver = cp.GUROBI)
+    prob_svm.solve(solver = svm_solver)
     
     W_1, c_1 = W.value, c.value
     test_err = np.mean( np.abs( yTest - np.sign( np.dot(W_1, XTest.toarray().T) - c_1 ) )/2 )
